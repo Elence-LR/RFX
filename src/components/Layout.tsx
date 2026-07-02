@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { BookOpen, Users, Sparkles, GraduationCap } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { to: '/', label: '课前预习', icon: BookOpen, desc: '问卷 · 学习 · 资源' },
+  { to: '/', label: '课前预习', icon: BookOpen, desc: '问卷 · 词云 · 学习' },
   { to: '/in-class', label: '课中实践', icon: Users, desc: '情景 · AI学伴 · 方案' },
   { to: '/post-class', label: '课后拓展', icon: Sparkles, desc: '美化 · 评价' },
 ]

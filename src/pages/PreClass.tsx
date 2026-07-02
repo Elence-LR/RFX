@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ClipboardList, Video, FileText, Image, BookOpen, ChevronRight, CheckCircle } from 'lucide-react'
+import { Cloud, Video, FileText, Image, BookOpen, ChevronRight, CheckCircle, Trash2 } from 'lucide-react'
+import WordCloudDisplay from '../components/WordCloudDisplay'
 import { LEARNING_CONTENT, RESOURCE_PACK } from '../data/content'
 import { storage } from '../utils/storage'
 
@@ -11,6 +12,7 @@ export default function PreClass() {
   const [confusion, setConfusion] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [learningMode, setLearningMode] = useState<LearningMode>(null)
+  const [answers, setAnswers] = useState(storage.getAnswers())
 
   const handleSubmit = () => {
     if (!interest.trim() || !confusion.trim()) return
@@ -21,10 +23,22 @@ export default function PreClass() {
       learningStyle: learningMode,
       timestamp: Date.now(),
     })
+    setAnswers(storage.getAnswers())
     setSubmitted(true)
     setInterest('')
     setConfusion('')
   }
+
+  const handleClearWordCloud = () => {
+    if (!answers.length) return
+    if (!window.confirm('确定要清空所有词云数据吗？此操作不可恢复。')) return
+    storage.clearAnswers()
+    setAnswers([])
+    setSubmitted(false)
+  }
+
+  const interestWords = answers.map(a => a.interest)
+  const confusionWords = answers.map(a => a.confusion)
 
   const learningModes = [
     { key: 'video' as const, label: '视频', icon: Video, color: 'from-red-400 to-red-600' },
@@ -36,39 +50,57 @@ export default function PreClass() {
     <div className="space-y-10">
       {/* Section 1: Pre-class Questions */}
       <section>
-        <div className="flex items-center gap-2 mb-1">
-          <ClipboardList className="text-primary-500" size={24} />
-          <h2 className="section-title !mb-0">课前问卷</h2>
-        </div>
-        <p className="section-subtitle">回答以下问题，帮助老师了解你的学习需求与困惑</p>
-
-        <div className="card max-w-2xl space-y-4">
-          <label className="block">
-            <span className="font-medium text-stone-700">1. 关于国内外思想政治教育评估标准，你最感兴趣的是什么？</span>
-            <textarea
-              className="input-field mt-2 min-h-[100px] resize-none"
-              placeholder="例如：第三方评估机制、差异化标准设计..."
-              value={interest}
-              onChange={e => setInterest(e.target.value)}
-            />
-          </label>
-          <label className="block">
-            <span className="font-medium text-stone-700">2. 关于国内外思想政治教育评估标准，你最困惑的点是什么？</span>
-            <textarea
-              className="input-field mt-2 min-h-[100px] resize-none"
-              placeholder="例如：如何平衡量化与质性评估、跨学科如何融合..."
-              value={confusion}
-              onChange={e => setConfusion(e.target.value)}
-            />
-          </label>
-          <button onClick={handleSubmit} className="btn-primary w-full" disabled={!interest.trim() || !confusion.trim()}>
-            提交回答
-          </button>
-          {submitted && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-600 text-sm flex items-center gap-1">
-              <CheckCircle size={16} /> 提交成功！
-            </motion.p>
+        <div className="flex items-center justify-between gap-4 mb-1">
+          <div className="flex items-center gap-2">
+            <Cloud className="text-primary-500" size={24} />
+            <h2 className="section-title !mb-0">课前问卷</h2>
+          </div>
+          {answers.length > 0 && (
+            <button
+              onClick={handleClearWordCloud}
+              className="btn-secondary text-sm flex items-center gap-1.5 text-red-600 hover:bg-red-50"
+            >
+              <Trash2 size={14} />
+              清空词云
+            </button>
           )}
+        </div>
+        <p className="section-subtitle">回答以下问题，平台将自动生成词云图展示全班同学的关注点</p>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="card space-y-4">
+            <label className="block">
+              <span className="font-medium text-stone-700">1. 关于国内外思想政治教育评估标准，你最感兴趣的是什么？</span>
+              <textarea
+                className="input-field mt-2 min-h-[100px] resize-none"
+                placeholder="例如：第三方评估机制、差异化标准设计..."
+                value={interest}
+                onChange={e => setInterest(e.target.value)}
+              />
+            </label>
+            <label className="block">
+              <span className="font-medium text-stone-700">2. 关于国内外思想政治教育评估标准，你最困惑的点是什么？</span>
+              <textarea
+                className="input-field mt-2 min-h-[100px] resize-none"
+                placeholder="例如：如何平衡量化与质性评估、跨学科如何融合..."
+                value={confusion}
+                onChange={e => setConfusion(e.target.value)}
+              />
+            </label>
+            <button onClick={handleSubmit} className="btn-primary w-full" disabled={!interest.trim() || !confusion.trim()}>
+              提交回答
+            </button>
+            {submitted && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-green-600 text-sm flex items-center gap-1">
+                <CheckCircle size={16} /> 提交成功！词云图已更新
+              </motion.p>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <WordCloudDisplay words={interestWords} title="🔥 兴趣点词云" />
+            <WordCloudDisplay words={confusionWords} title="❓ 困惑点词云" />
+          </div>
         </div>
       </section>
 

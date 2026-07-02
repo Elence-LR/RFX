@@ -28,6 +28,9 @@ export const storage = {
     list.push(answer)
     save(KEYS.answers, list)
   },
+  clearAnswers: () => {
+    save(KEYS.answers, [])
+  },
 
   getPlans: () => load<OptimizationPlan[]>(KEYS.plans, []),
   addPlan: (plan: OptimizationPlan) => {
