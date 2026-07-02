@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, Star, Users, Bot, Copy, CheckCircle } from 'lucide-react'
+import { Sparkles, Star, Users, Bot, Copy, CheckCircle, Lightbulb } from 'lucide-react'
 import XiaosiAvatar from '../components/XiaosiAvatar'
 import { storage } from '../utils/storage'
 
@@ -75,6 +75,33 @@ function aiEvaluate(content: string): { score: number; comment: string } {
   return { score, comment }
 }
 
+const WARM_TIPS = [
+  '可尝试发送指令，运用AI智能软件中的绘图功能美化作品',
+  '试着与身旁的伙伴相互评价作业，共同进步成长',
+  '课后可以与父母分享学习成果，获得不同的意见与评价',
+]
+
+function WarmTips() {
+  return (
+    <section className="card bg-amber-50/60 border border-amber-200/80">
+      <div className="flex items-center gap-2 mb-4">
+        <Lightbulb className="text-amber-500" size={22} />
+        <h2 className="text-lg font-semibold text-amber-900">温馨提示</h2>
+      </div>
+      <ol className="space-y-3">
+        {WARM_TIPS.map((tip, i) => (
+          <li key={i} className="flex items-start gap-3 text-sm text-amber-900/90 leading-relaxed">
+            <span className="shrink-0 w-6 h-6 rounded-full bg-amber-200/80 text-amber-800 text-xs font-semibold flex items-center justify-center">
+              {i + 1}
+            </span>
+            <span>{tip}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
 export default function PostClass() {
   const [plans] = useState(storage.getPlans())
   const [selectedPlanId, setSelectedPlanId] = useState(plans[0]?.id ?? '')
@@ -127,10 +154,13 @@ export default function PostClass() {
 
   if (plans.length === 0) {
     return (
-      <div className="card text-center py-16">
-        <Sparkles className="mx-auto text-stone-300 mb-4" size={48} />
-        <h2 className="text-xl font-semibold text-stone-600 mb-2">暂无方案可评价</h2>
-        <p className="text-stone-400">请先在"课中实践"页面提交优化方案书</p>
+      <div className="space-y-10">
+        <div className="card text-center py-16">
+          <Sparkles className="mx-auto text-stone-300 mb-4" size={48} />
+          <h2 className="text-xl font-semibold text-stone-600 mb-2">暂无方案可评价</h2>
+          <p className="text-stone-400">请先在"课中实践"页面提交优化方案书</p>
+        </div>
+        <WarmTips />
       </div>
     )
   }
@@ -305,6 +335,8 @@ export default function PostClass() {
           </motion.div>
         )}
       </section>
+
+      <WarmTips />
     </div>
   )
 }

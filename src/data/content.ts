@@ -78,9 +78,9 @@ export const LEARNING_CONTENT = {
         data: [
           { country: '美国', dimensions: 8, qualitative: 60, quantitative: 40 },
           { country: '英国', dimensions: 12, qualitative: 55, quantitative: 45 },
-          { country: '德国', dimensions: 6, qualitative: 50, quantitative: 50 },
+          { country: '德国', dimensions: 8, qualitative: 50, quantitative: 50 },
           { country: '日本', dimensions: 15, qualitative: 45, quantitative: 55 },
-          { country: '中国(现状)', dimensions: 3, qualitative: 10, quantitative: 90 },
+          { country: '中国(现状)', dimensions: 7, qualitative: 10, quantitative: 90 },
         ],
       },
       {
@@ -91,7 +91,7 @@ export const LEARNING_CONTENT = {
           { country: '英国', external: 40 },
           { country: '德国', external: 25 },
           { country: '日本', external: 30 },
-          { country: '中国(现状)', external: 0 },
+          { country: '中国(现状)', external: 5 },
         ],
       },
       {
@@ -143,7 +143,7 @@ export const RESOURCE_PACK = [
 ]
 
 export const SCENARIO = {
-  title: '情景：志愿服务类思政教育评估改革',
+  title: '情景：鉴衡知行：志愿服务评估体系优化研讨会',
   background: `我国某高校开展志愿服务类思政教育评估，由学校团委和马克思主义学院联合主导，依据《普通高等学校马克思主义学院建设标准（2019年本）》及学校思政教育实施细则制定评估规则。`,
   problems: [
     '评估重点核查志愿服务活动的开展次数、参与学生覆盖率、累计服务总时长等宏观指标',
